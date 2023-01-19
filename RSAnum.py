@@ -54,6 +54,15 @@ configFile.read("config.ini")
 
 RSAnumGenerator = configFile["RSA_NUMBER_GENERATOR"]
 nBit = int(RSAnumGenerator["nbit"])
-lowLevelTest = bool(RSAnumGenerator["lowleveltest"])
+lowLevelTest = RSAnumGenerator["lowleveltest"]
 nPrimeNumbers = int(RSAnumGenerator["nprimesnumber"])
 MillerRabinTrials = int(RSAnumGenerator["millerrabintrials"])
+
+def RSAnumberGenerator():
+    while True:
+        number = nBitRandomNum(nBit)
+        if lowLevelTest == True:
+            if LowLevelPrimalityTest(number, nPrimeNumbers) == False:
+                continue
+        if MillerRabinTest(number, nPrimeNumbers) == True:
+            return number
