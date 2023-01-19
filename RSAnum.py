@@ -1,4 +1,5 @@
 import random
+from configparser import ConfigParser
 
 def nBitRandomNum(n):
     return(random.randrange(2**(n-1)+1, 2**n-1))
@@ -46,4 +47,13 @@ def MillerRabinTest(candidate, k):
         round_tester = random.randrange(2, candidate)
         if trialComposite(round_tester):
             return False
-    return True           
+    return True
+
+configFile = ConfigParser()
+configFile.read("config.ini")
+
+RSAnumGenerator = configFile["RSA_NUMBER_GENERATOR"]
+nBit = int(RSAnumGenerator["nbit"])
+lowLevelTest = bool(RSAnumGenerator["lowleveltest"])
+nPrimeNumbers = int(RSAnumGenerator["nprimesnumber"])
+MillerRabinTrials = int(RSAnumGenerator["millerrabintrials"])
