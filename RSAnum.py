@@ -18,3 +18,10 @@ def nPrimeNumber(n):
             primeNumbers.append(i)
         i += 1
     return primeNumbers
+
+def LowLevelPrimalityTest(candidate, nPrimes):
+    PrimeNumbers = nPrimeNumber(nPrimes)
+    for i in range(len(PrimeNumbers)):
+        if candidate % PrimeNumbers[i] == 0:
+            return False
+    return True            
