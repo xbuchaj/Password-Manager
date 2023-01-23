@@ -61,7 +61,7 @@ MillerRabinTrials = int(RSAnumGenerator["millerrabintrials"])
 def RSAnumberGenerator():
     while True:
         number = nBitRandomNum(nBit)
-        if lowLevelTest == True:
+        if lowLevelTest == "True":
             if LowLevelPrimalityTest(number, nPrimeNumbers) == False:
                 continue
         if MillerRabinTest(number, nPrimeNumbers) == True:
