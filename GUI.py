@@ -16,16 +16,27 @@ def logIn():
     print(terminal.move_xy((terminal.width // 2) - 11, terminal.height) +  "Tab: MOVE, Enter: SELECT")
     pointer = 1
     while True:
+        if pointer == 1:
+            print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4) +  "DONE")
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  "█")
+        elif pointer == 2:
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  " ")
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  "█")
+        else:
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  " ")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4)  +  "DONE")
+            print(terminal.white + terminal.on_cornflowerblue)
         with terminal.cbreak():
             val = terminal.inkey()
             if val.is_sequence:
                 if val.code == 263:
                     if pointer == 1:
                         username = username[0: len(username) - 1]
-                        print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  " ")
+                        print(terminal.move_xy((terminal.width // 2) + 3 + len(username), terminal.height // 2) +  " ")
                     if pointer == 2:
                         password = password[0: len(password) - 1]
-                        print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  " ")
+                        print(terminal.move_xy((terminal.width // 2) + 3 + len(password), (terminal.height // 2) + 2) +  " ")
                 elif pointer < 3:
                     if (val.code == 512) or (val.code == 343):
                         pointer += 1
