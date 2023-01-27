@@ -11,18 +11,6 @@ def main():
         if (var[0] == "") or (var[1] == ""):
             flag = True
 
-        # If user fill in whole form
-        if (var[0] != "") or (var[1] != ""):
-            with open('users.csv', 'r') as file:
-                reader = csv.reader(file)
-                flag = True
-                for row in reader:
-                    if (var[0] == row[0]) and (var[1] == row[1]):
-                        flag = False
-                        break
-            if flag == False:
-                break
-
         # If user select option to create new account
         elif var == "new_account":
             flag = False
@@ -56,6 +44,18 @@ def main():
                         with open('users.csv', 'w', newline='') as file:
                             writer = csv.writer(file)
                             writer.writerows(t)
-                    if flag == False:
+                    if flag == False:       
                         break
+
+        # If user fill in whole form
+        else:
+            with open('users.csv', 'r') as file:
+                reader = csv.reader(file)
+                flag = True
+                for row in reader:
+                    if (var[0] == row[0]) and (var[1] == row[1]):
+                        flag = False
+                        break
+            if flag == False:
+                break
 main()
