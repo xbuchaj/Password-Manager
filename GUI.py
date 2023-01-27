@@ -4,7 +4,7 @@ import os
 terminal = blessed.Terminal()
 os.system("mode con cols=60 lines=21")
 
-def logIn():
+def logIn(error = False):
     # Variables (string) for username and password
     username = ""
     password = ""
@@ -15,7 +15,10 @@ def logIn():
     print(terminal.move_xy((terminal.width // 2) - 3, terminal.height // 2 - 1) + terminal.bold +  "LOG IN")
     print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height // 2) + 1) +  "USERNAME:")
     print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height // 2) + 3) +  "PASSWORD:")
-    print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 5) +  "DONE")
+    if error == True:
+        print(terminal.move_xy((terminal.width // 2) - 13, (terminal.height // 2) + 4) + terminal.red + "Wrong username or password")
+    print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 5) + terminal.white + "DONE")
+    print(terminal.move_xy((terminal.width // 2) - 15, (terminal.height // 2) + 7) +  "I want to create new account!")
     print(terminal.move_xy((terminal.width // 2) - 17, terminal.height) +  "↑↓: MOVE, Enter: SELECT, ESC: Quit")
 
     # Variable (int) for position where is cursor
@@ -24,17 +27,23 @@ def logIn():
         # Commands for drawing the cursor
         if pointer == 1:
             print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  " ")
-            print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4) +  "DONE")
+            print(terminal.move_xy((terminal.width // 2) - 15, (terminal.height // 2) + 6) +  "I want to create new account!")
             print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  "█")
         elif pointer == 2:
             print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4) +  "DONE")
             print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  " ")
             print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  "█")
-        else:
-            print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  " ")
+        elif pointer == 3:
+            print(terminal.move_xy((terminal.width // 2) - 15, (terminal.height // 2) + 6) +  "I want to create new account!")
             print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  " ")
             print(terminal.cornflowerblue + terminal.on_white)
             print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4)  +  "DONE")
+            print(terminal.white + terminal.on_cornflowerblue)
+        else:
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  " ")
+            print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4) +  "DONE")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy((terminal.width // 2) - 15, (terminal.height // 2) + 6) +  "I want to create new account!")
             print(terminal.white + terminal.on_cornflowerblue)
 
         # Load the key immediately after press
@@ -64,15 +73,19 @@ def logIn():
                         pointer += 1
                     elif pointer == 3:
                         return username, password
+                    elif pointer == 4:
+                        return "new_account"
 
                 # If was press UP key
                 elif val.code == 259:
                     if pointer == 1:
-                        pointer = 3
+                        pointer = 4
                     elif pointer == 2:
                         pointer = 1
                     elif pointer == 3:
                         pointer = 2
+                    elif pointer == 4:
+                        pointer = 3
                 
                 # If was press DOWN key
                 elif val.code == 258:
@@ -81,6 +94,8 @@ def logIn():
                     elif pointer == 2:
                         pointer = 3
                     elif pointer == 3:
+                        pointer = 4
+                    elif pointer == 4:
                         pointer = 1  
 
             # If was press key with letter
