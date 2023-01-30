@@ -6,6 +6,7 @@ def nBitRandomNum(n):
 
 def nPrimeNumber(n):
     primeNumbers = []
+    i = 0
     if n > 0:
         primeNumbers.append(2)
         i = 3
