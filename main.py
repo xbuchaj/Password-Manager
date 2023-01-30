@@ -1,7 +1,10 @@
-from GUI import logIn, signIn
+from GUI import logIn, signIn, manager
 import csv
 
 def main():
+    # Variable for current user id
+    userID = None
+
     # Log in or sign in section
     flag = False
     while True:
@@ -59,7 +62,19 @@ def main():
                 for row in reader:
                     if (var[0] == row[0]) and (var[1] == row[1]):
                         flag = False
+                        userID = row[2]
                         break
             if flag == False:
                 break
+
+    # Load data from database for current user
+    userData = []
+    with open('data.csv', 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row[0] == userID:
+                userData.append(row)
+    
+    # Run main menu of manager
+    print(manager(userData))
 main()
