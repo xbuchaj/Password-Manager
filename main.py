@@ -40,7 +40,11 @@ def main():
                             t = []
                             for row in reader:
                                 t.append(row)
-                            t.append([var[0], var[1]])
+                            if t[len(t) - 1][2] == "UserID":
+                                id = 1
+                            else:
+                                id = int(t[len(t) - 1][2]) + 1
+                            t.append([var[0], var[1], id])
                         with open('users.csv', 'w', newline='') as file:
                             writer = csv.writer(file)
                             writer.writerows(t)
