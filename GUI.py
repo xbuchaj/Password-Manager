@@ -239,12 +239,12 @@ def manager(t):
             if pointer <= 6:
                 for i in range(0, len(t)):
                     if i < 6:
-                        print(terminal.move_xy(9, 4 + (i * 2)) +  t[i][0])
-                        print(terminal.move_xy(22, 4 + (i * 2)) +  t[i][1])
+                        print(terminal.move_xy(9, 4 + (i * 2)) +  t[i][2])
+                        print(terminal.move_xy(22, 4 + (i * 2)) +  t[i][3])
                         for j in range(9, terminal.width - 9):
                             print(terminal.move_xy(j, 5 + (i * 2)) +  "═")
                 print(terminal.cornflowerblue + terminal.on_white)
-                print(terminal.move_xy(9, 4 + ((pointer - 1) * 2)) +  t[pointer - 1][0])
+                print(terminal.move_xy(9, 4 + ((pointer - 1) * 2)) +  t[pointer - 1][2])
                 print(terminal.white + terminal.on_cornflowerblue)
 
             if pointer > 6:
@@ -252,12 +252,12 @@ def manager(t):
                 for i in range(pointer - 6, len(t)):
                     j += 1
                     if i < pointer:
-                        print(terminal.move_xy(9, 4 + (j * 2)) +  t[i][0])
-                        print(terminal.move_xy(22, 4 + (j * 2)) +  t[i][1])
+                        print(terminal.move_xy(9, 4 + (j * 2)) +  t[i][2])
+                        print(terminal.move_xy(22, 4 + (j * 2)) +  t[i][3])
                         for k in range(9, terminal.width - 9):
                             print(terminal.move_xy(k, 5 + (j * 2)) +  "═")
                 print(terminal.cornflowerblue + terminal.on_white)
-                print(terminal.move_xy(9, 14) +  t[pointer - 1][0])
+                print(terminal.move_xy(9, 14) +  t[pointer - 1][2])
                 print(terminal.white + terminal.on_cornflowerblue)
         
         # Draw the cursor in the select menu
@@ -295,7 +295,7 @@ def manager(t):
                 # If was press ENTER key
                 elif val.code == 343:
                     if pointer <= len(t):
-                        outputID = t[pointer - 1][2]
+                        outputID = t[pointer - 1][1]
                         pointer = len(t) + 2
                     elif pointer == (len(t) + 1):
                         return "edit", outputID
