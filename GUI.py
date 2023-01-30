@@ -197,3 +197,146 @@ def signIn(error = False):
                 if pointer == 2:
                     password = password + format(val)
                     print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) + 2) + len(password) * "*")
+
+def manager(t):
+    os.system("mode con cols=60 lines=21")
+
+    # Commands for drawing the graphic user interface
+    print(terminal.home + terminal.on_cornflowerblue + terminal.clear)
+    for i in range(3, terminal.height - 5):
+        print(terminal.move_xy(8, i) +  "║")
+        print(terminal.move_xy((terminal.width - 9), i) +  "║")
+        if i == 3:
+            print(terminal.move_xy(21, i) +  "║")
+        if i >= 5:
+            print(terminal.move_xy(21, i) +  "║")
+    for i in range(9, terminal.width - 9):
+        print(terminal.move_xy(i, 2) +  "═")
+        print(terminal.move_xy(i, 4) +  "═")
+        print(terminal.move_xy(i, (terminal.height - 5)) +  "═")
+    print(terminal.move_xy(8, 2) +  "╔")
+    print(terminal.move_xy((terminal.width - 9), 2) +  "╗")
+    print(terminal.move_xy(8, (terminal.height - 5)) +  "╚")
+    print(terminal.move_xy((terminal.width - 9), (terminal.height - 5)) +  "╝")
+    print(terminal.move_xy(12, 3) +  "DOMAIN")
+    print(terminal.move_xy(28, 3) +  "USERNAME / E-MAIL")
+    print(terminal.move_xy(9, (terminal.height - 3)) +  "EDIT")
+    print(terminal.move_xy((terminal.width // 2) - 6, (terminal.height - 3)) +  "SHOW PASSWORD")
+    print(terminal.move_xy((terminal.width - 15), (terminal.height - 3)) +  "DELETE")
+    print(terminal.move_xy((terminal.width // 2) - 25, terminal.height) +  "↑↓→←: MOVE, N: CREATE NEW, Enter: SELECT, ESC: Quit")
+
+    # Variable (int) for position where is cursor
+    pointer = 1
+    lastPointer = None
+
+    # Variable for output
+    outputID = None
+
+    while True:
+        # Write domain names and usernames and draw the cursor in the list of domains
+        if (pointer != lastPointer) and (pointer < (len(t) + 1)):
+            lastPointer = pointer
+            if pointer <= 6:
+                for i in range(0, len(t)):
+                    if i < 6:
+                        print(terminal.move_xy(9, 4 + (i * 2)) +  t[i][0])
+                        print(terminal.move_xy(22, 4 + (i * 2)) +  t[i][1])
+                        for j in range(9, terminal.width - 9):
+                            print(terminal.move_xy(j, 5 + (i * 2)) +  "═")
+                print(terminal.cornflowerblue + terminal.on_white)
+                print(terminal.move_xy(9, 4 + ((pointer - 1) * 2)) +  t[pointer - 1][0])
+                print(terminal.white + terminal.on_cornflowerblue)
+
+            if pointer > 6:
+                j = -1
+                for i in range(pointer - 6, len(t)):
+                    j += 1
+                    if i < pointer:
+                        print(terminal.move_xy(9, 4 + (j * 2)) +  t[i][0])
+                        print(terminal.move_xy(22, 4 + (j * 2)) +  t[i][1])
+                        for k in range(9, terminal.width - 9):
+                            print(terminal.move_xy(k, 5 + (j * 2)) +  "═")
+                print(terminal.cornflowerblue + terminal.on_white)
+                print(terminal.move_xy(9, 14) +  t[pointer - 1][0])
+                print(terminal.white + terminal.on_cornflowerblue)
+        
+        # Draw the cursor in the select menu
+        if pointer == (len(t) + 1):
+            print(terminal.move_xy((terminal.width // 2) - 6, (terminal.height - 4)) +  "SHOW PASSWORD")
+            print(terminal.move_xy((terminal.width - 15), (terminal.height - 4)) +  "DELETE")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy(9, (terminal.height - 4)) +  "EDIT")
+            print(terminal.white + terminal.on_cornflowerblue)
+        elif pointer == (len(t) + 2):
+            print(terminal.move_xy(9, (terminal.height - 4)) +  "EDIT")
+            print(terminal.move_xy((terminal.width - 15), (terminal.height - 4)) +  "DELETE")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy((terminal.width // 2) - 6, (terminal.height - 4)) +  "SHOW PASSWORD")
+            print(terminal.white + terminal.on_cornflowerblue)
+        elif pointer == (len(t) + 3):
+            print(terminal.move_xy(9, (terminal.height - 4)) +  "EDIT")
+            print(terminal.move_xy((terminal.width // 2) - 6, (terminal.height - 4)) +  "SHOW PASSWORD")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy((terminal.width - 15), (terminal.height - 4)) +  "DELETE")
+            print(terminal.white + terminal.on_cornflowerblue)
+
+        # Load the key immediately after press
+        with terminal.cbreak():
+            # Variable for code of key which was press
+            val = terminal.inkey()
+            
+            # If wasn't press key with letter
+            if val.is_sequence:
+
+                # If was press the ESC key
+                if val.code == 361:
+                    quit()
+
+                # If was press ENTER key
+                elif val.code == 343:
+                    if pointer <= len(t):
+                        outputID = t[pointer - 1][2]
+                        pointer = len(t) + 2
+                    elif pointer == (len(t) + 1):
+                        return "edit", outputID
+                    elif pointer == (len(t) + 2):
+                        return "show", outputID
+                    elif pointer == (len(t) + 3):
+                        return "del", outputID
+
+                # If was press RIGHT key
+                elif val.code == 261:
+                    if pointer > len(t):
+                        if pointer < len(t) + 3:
+                            pointer += 1
+                        else:
+                            pointer = len(t) + 1
+
+                # If was press LEFT key
+                elif val.code == 260:
+                    if pointer > len(t):
+                        if pointer > len(t) + 1:
+                            pointer -= 1
+                        else:
+                            pointer = len(t) + 3
+
+                # If was press UP key
+                elif val.code == 259:
+                    if pointer <= len(t):
+                        if pointer > 1:
+                            pointer -= 1
+                        else:
+                            pointer = len(t)
+                
+                # If was press DOWN key
+                elif val.code == 258:
+                    if pointer <= len(t):
+                        if pointer < len(t):
+                            pointer += 1
+                        else:
+                            pointer = 1
+            
+            # If was press key with letter
+            else:
+                if (val == 'n') or (val == 'N'):
+                    return "create"
