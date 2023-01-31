@@ -1,4 +1,4 @@
-from GUI import logIn, signIn, manager, addNew
+from GUI import logIn, signIn, manager, addNew, showPassword
 import csv
 
 def main():
@@ -120,6 +120,22 @@ def main():
 
                     if flag == False:
                         break
+
+            # If user want to edit record
+            #elif var[0] == "edit":
+
+            # If user want to see the passford of record
+            elif var[0] == "show":
+                with open('data.csv', 'r') as file:
+                    reader = csv.reader(file)
+                    for row in reader:
+                        if row[1] == var[1]:
+                            showPassword(row)
+                            break
+
+            # If user want to delete record
+            #elif var[0] == "del":
+
         # If user want to log out
         continue
 
