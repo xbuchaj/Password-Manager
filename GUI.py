@@ -342,7 +342,7 @@ def manager(t):
                     return "create"
 
 def addNew(error = False):
-    os.system("mode con cols=60 lines=21")
+    os.system("mode con cols=60 lines=18")
 
     # Variables (string) for domain, username and password
     domain = ""
@@ -447,3 +447,29 @@ def addNew(error = False):
                 if pointer == 3:
                     password = password + format(val)
                     print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) + 2) + len(password) * "*")
+
+def showPassword(t):
+    os.system("mode con cols=50 lines=10")
+
+    print(terminal.home + terminal.on_cornflowerblue + terminal.clear)
+    print(terminal.move_xy((terminal.width // 2) - 17, (terminal.height - 7)) + "SHOW DOMAIN, USERNAME AND PASSWORD")
+    print(terminal.move_xy((terminal.width // 2) - 6, (terminal.height - 5)) + "DOMAIN:")
+    print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height - 4)) + "USERNAME:")
+    print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height - 3)) + "PASSWORD:")
+    print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height - 5)) + t[2])
+    print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height - 4)) + t[3])
+    print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height - 3)) + t[4])
+    print(terminal.move_xy((terminal.width // 2) - 15, terminal.height) +  "Enter / ESC: BACK TO MAIN MENU")
+
+    while True:
+        # Load the key immediately after press
+        with terminal.cbreak():
+            # Variable for code of key which was press
+            val = terminal.inkey()
+            
+            # If wasn't press key with letter
+            if val.is_sequence:
+
+                # If was press the ESC key or ENTER key
+                if (val.code == 361) or (val.code == 343):
+                    break
