@@ -223,7 +223,7 @@ def manager(t):
     print(terminal.move_xy(9, (terminal.height - 3)) +  "EDIT")
     print(terminal.move_xy((terminal.width // 2) - 6, (terminal.height - 3)) +  "SHOW PASSWORD")
     print(terminal.move_xy((terminal.width - 15), (terminal.height - 3)) +  "DELETE")
-    print(terminal.move_xy((terminal.width // 2) - 25, terminal.height) +  "↑↓→←: MOVE, N: CREATE NEW, Enter: SELECT, ESC: Quit")
+    print(terminal.move_xy((terminal.width // 2) - 27, terminal.height) +  "↑↓→←: MOVE, N: CREATE NEW, Enter: SELECT, ESC: LOG OUT")
 
     # Variable (int) for position where is cursor
     pointer = 1
@@ -290,7 +290,7 @@ def manager(t):
 
                 # If was press the ESC key
                 if val.code == 361:
-                    quit()
+                    return "logOut"
 
                 # If was press ENTER key
                 elif val.code == 343:
@@ -358,7 +358,7 @@ def addNew(error = False):
     if error == True:
         print(terminal.move_xy((terminal.width // 2) - 13, (terminal.height // 2) + 4) + terminal.red + "You must fill in all data.")
     print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 5) + terminal.white + "DONE")
-    print(terminal.move_xy((terminal.width // 2) - 17, terminal.height) +  "↑↓: MOVE, Enter: SELECT, ESC: Quit")
+    print(terminal.move_xy((terminal.width // 2) - 23, terminal.height) +  "↑↓: MOVE, Enter: SELECT, ESC: BACK TO MAIN MENU")
 
     # Variable (int) for position where is cursor
     pointer = 1
@@ -393,7 +393,7 @@ def addNew(error = False):
 
                 # If was press the ESC key
                 if val.code == 361:
-                    quit()
+                    return "back"
 
                 # If was press the BACKSPACE key
                 elif val.code == 263:
