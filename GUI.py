@@ -529,7 +529,7 @@ def edit(t, error = False):
 
                 # If was press the ESC key
                 if val.code == 361:
-                    return "back"
+                    break
 
                 # If was press the BACKSPACE key
                 elif val.code == 263:
