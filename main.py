@@ -1,4 +1,4 @@
-from GUI import logIn, signIn, manager, addNew, showPassword
+from GUI import logIn, signIn, manager, addNew, showPassword, edit
 import csv
 
 def main():
@@ -122,7 +122,19 @@ def main():
                         break
 
             # If user want to edit record
-            #elif var[0] == "edit":
+            elif var[0] == "edit":
+                with open('data.csv', 'r') as file:
+                    reader = csv.reader(file)
+                    t = []
+                    for row in reader:
+                        if row[1] == var[1]:
+                            var = edit(row)
+                            t.append([row[0], row[1], var[0], var[1], var[2]])
+                        else:
+                            t.append(row)
+                with open('data.csv', 'w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerows(t)
 
             # If user want to see the passford of record
             elif var[0] == "show":
