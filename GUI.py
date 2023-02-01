@@ -623,7 +623,7 @@ def delete(t):
             if val.is_sequence:
 
                 if val.code == 361:
-                    break
+                    return "pass"
                 
                 elif val.code == 343:
                     if pointer == 1:
