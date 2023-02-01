@@ -474,7 +474,7 @@ def showPassword(t):
                 if (val.code == 361) or (val.code == 343):
                     break
 
-def edit(t, error = False):
+def edit(t):
     os.system("mode con cols=60 lines=18")
 
     # Variables (string) for domain, username and password
@@ -488,8 +488,8 @@ def edit(t, error = False):
     print(terminal.move_xy((terminal.width // 2) - 6, terminal.height // 2 - 1) + terminal.bold +  "DOMAIN:")
     print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height // 2) + 1) +  "USERNAME:")
     print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height // 2) + 3) +  "PASSWORD:")
-    if error == True:
-        print(terminal.move_xy((terminal.width // 2) - 13, (terminal.height // 2) + 4) + terminal.red + "You must fill in all data.")
+    # if error == True:
+        # print(terminal.move_xy((terminal.width // 2) - 13, (terminal.height // 2) + 4) + terminal.red + "You must fill in all data.")
     print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 5) + terminal.white + "DONE")
     print(terminal.move_xy((terminal.width // 2) - 23, terminal.height) +  "↑↓: MOVE, Enter: SELECT, ESC: BACK TO MAIN MENU")
     print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) - 2) +  domain)
@@ -583,3 +583,57 @@ def edit(t, error = False):
                 if pointer == 3:
                     password = password + format(val)
                     print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) + 2) + len(password) * "*")
+
+def delete(t):
+    os.system("mode con cols=50 lines=9")
+
+    # Variables (string) for domain
+    domain = t[2]
+
+    # Commands for drawing the graphic user interface
+    print(terminal.home + terminal.on_cornflowerblue + terminal.clear)
+    print(terminal.move_xy((terminal.width // 2) - 14, terminal.height - 7) + terminal.bold +  "DO YOU WANT REALLY DELETE IT?")
+    print(terminal.move_xy((terminal.width // 2) - 11, terminal.height - 5) + terminal.bold +  "DOMAIN NAME:")
+    print(terminal.move_xy((terminal.width // 2) + 2, terminal.height - 5) + terminal.bold +  domain)
+    print(terminal.move_xy((terminal.width // 2) - 6, terminal.height - 3) +  "YES")
+    print(terminal.move_xy((terminal.width // 2) + 3, terminal.height - 3) +  "NO")
+    print(terminal.move_xy((terminal.width // 2) - 23, terminal.height) +  "→←: MOVE, Enter: SELECT, ESC: BACK TO MAIN MENU")
+
+    # Variable (int) for position where is cursor
+    pointer = 2
+    while True:
+        # Commands for drawing the cursor
+        if pointer == 1:
+            print(terminal.move_xy((terminal.width // 2) + 3, terminal.height - 4) +  "NO")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy((terminal.width // 2) - 6, terminal.height - 4) +  "YES")
+            print(terminal.white + terminal.on_cornflowerblue)
+        elif pointer == 2:
+            print(terminal.move_xy((terminal.width // 2) - 6, terminal.height - 4) +  "YES")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy((terminal.width // 2) + 3, terminal.height - 4) +  "NO")
+            print(terminal.white + terminal.on_cornflowerblue)
+        
+        # Load the key immediately after press
+        with terminal.cbreak():
+            # Variable for code of key which was press
+            val = terminal.inkey()
+            
+            # If wasn't press key with letter
+            if val.is_sequence:
+
+                if val.code == 361:
+                    break
+                
+                elif val.code == 343:
+                    if pointer == 1:
+                        return "delete"
+                    else:
+                        return "pass"
+
+                # If was press RIGHT key or LEFT key
+                elif (val.code == 261) or (val.code == 260):
+                    if pointer == 1:
+                        pointer = 2
+                    else:
+                        pointer = 1
