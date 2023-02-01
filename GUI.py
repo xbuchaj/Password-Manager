@@ -473,3 +473,113 @@ def showPassword(t):
                 # If was press the ESC key or ENTER key
                 if (val.code == 361) or (val.code == 343):
                     break
+
+def edit(t, error = False):
+    os.system("mode con cols=60 lines=18")
+
+    # Variables (string) for domain, username and password
+    domain = t[2]
+    username = t[3]
+    password = t[4]
+
+    # Commands for drawing the graphic user interface
+    print(terminal.home + terminal.on_cornflowerblue + terminal.clear)
+    print(terminal.move_xy((terminal.width // 2) - 19, (terminal.height // 2) - 5) + terminal.bold +  "EDIT DOMAIN NAME, USERNAME OR PASSWORD")
+    print(terminal.move_xy((terminal.width // 2) - 6, terminal.height // 2 - 1) + terminal.bold +  "DOMAIN:")
+    print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height // 2) + 1) +  "USERNAME:")
+    print(terminal.move_xy((terminal.width // 2) - 8, (terminal.height // 2) + 3) +  "PASSWORD:")
+    if error == True:
+        print(terminal.move_xy((terminal.width // 2) - 13, (terminal.height // 2) + 4) + terminal.red + "You must fill in all data.")
+    print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 5) + terminal.white + "DONE")
+    print(terminal.move_xy((terminal.width // 2) - 23, terminal.height) +  "↑↓: MOVE, Enter: SELECT, ESC: BACK TO MAIN MENU")
+    print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) - 2) +  domain)
+    print(terminal.move_xy((terminal.width // 2) + 2, terminal.height // 2) +  username)
+    print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) + 2) + len(password) * "*")
+
+    # Variable (int) for position where is cursor
+    pointer = 1
+    while True:
+        # Commands for drawing the cursor
+        if pointer == 1:
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  " ")
+            print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4) +  "DONE")
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(domain), (terminal.height // 2) - 2) +  "█")
+        elif pointer == 2:
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(domain), (terminal.height // 2) - 2) +  " ")
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  " ")
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  "█")
+        elif pointer == 3:
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(username), terminal.height // 2) +  " ")
+            print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4) +  "DONE")
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  "█")
+        else:
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(domain), (terminal.height // 2) - 2) +  " ")
+            print(terminal.move_xy((terminal.width // 2) + 2 + len(password), (terminal.height // 2) + 2) +  " ")
+            print(terminal.cornflowerblue + terminal.on_white)
+            print(terminal.move_xy((terminal.width // 2) - 2, (terminal.height // 2) + 4)  +  "DONE")
+            print(terminal.white + terminal.on_cornflowerblue)
+
+        # Load the key immediately after press
+        with terminal.cbreak():
+            # Variable for code of key which was press
+            val = terminal.inkey()
+            
+            # If wasn't press key with letter
+            if val.is_sequence:
+
+                # If was press the ESC key
+                if val.code == 361:
+                    return "back"
+
+                # If was press the BACKSPACE key
+                elif val.code == 263:
+                    if pointer == 1:
+                        domain = domain[0: len(domain) - 1]
+                        print(terminal.move_xy((terminal.width // 2) + 3 + len(domain), (terminal.height // 2) - 2) +  " ")
+                    if pointer == 2:
+                        username = username[0: len(username) - 1]
+                        print(terminal.move_xy((terminal.width // 2) + 3 + len(username), terminal.height // 2) +  " ")
+                    if pointer == 3:
+                        password = password[0: len(password) - 1]
+                        print(terminal.move_xy((terminal.width // 2) + 3 + len(password), (terminal.height // 2) + 2) +  " ")
+
+                # If was press ENTER key
+                elif val.code == 343:
+                    if pointer < 3:
+                        pointer += 1
+                    elif pointer == 4:
+                        return domain, username, password
+
+                # If was press UP key
+                elif val.code == 259:
+                    if pointer == 1:
+                        pointer = 4
+                    elif pointer == 2:
+                        pointer = 1
+                    elif pointer == 3:
+                        pointer = 2
+                    elif pointer == 4:
+                        pointer = 3
+                
+                # If was press DOWN key
+                elif val.code == 258:
+                    if pointer == 1:
+                        pointer = 2
+                    elif pointer == 2:
+                        pointer = 3
+                    elif pointer == 3:
+                        pointer = 4
+                    elif pointer == 4:
+                        pointer = 1
+            
+            # If was press key with letter
+            else:
+                if pointer == 1:
+                    domain = domain + format(val)
+                    print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) - 2) +  domain)
+                if pointer == 2:
+                    username = username + format(val)
+                    print(terminal.move_xy((terminal.width // 2) + 2, terminal.height // 2) +  username)
+                if pointer == 3:
+                    password = password + format(val)
+                    print(terminal.move_xy((terminal.width // 2) + 2, (terminal.height // 2) + 2) + len(password) * "*")
