@@ -100,3 +100,10 @@ def AES128key():
             oneRow = []
 
     return AES128keyMatrix
+
+def RotWord(Metrix):
+    flag = Metrix[3][0]
+    Metrix[3][0] = Metrix[3][1]
+    Metrix[3][1] = Metrix[3][2]
+    Metrix[3][2] = Metrix[3][3]
+    Metrix[3][3] = flag
