@@ -1,3 +1,5 @@
+from RSAnum import RSAnumberGenerator 
+
 subBytes = [
     ["63", "CA", "B7", "04", "09", "53", "D0", "51", "CD", "60", "E0", "E7", "BA", "70", "E1", "8C"],
     ["7C", "82", "FD", "C7", "83", "D1", "EF", "A3", "0C", "81", "32", "C8", "78", "3E", "F8", "A1"],
@@ -29,3 +31,52 @@ Rcon = [
     ["1B", "00", "00", "00"],
     ["36", "00", "00", "00"],
 ]
+
+def padding(inputData):
+    # Variable for input in hex code
+    inputHex = []
+    while True:
+        # Write hex code of the input to the array
+        # If lenght of input is less than 16, than hex code is only in one array and while lenght of array is less than 16 is use padding 
+        if len(inputData) < 16:
+            outputData = []
+            for i in range(len(inputData)):
+                outputData.append(hex(ord(inputData[i])))
+            add = 16 - len(inputData)
+            for i in range(add):
+                outputData.append(hex(add))
+            inputHex.append(outputData)
+            break
+        # If lenght of input is less 16, than hex code is in two array and in the second array is use padding 
+        elif len(inputData) == 16:
+            outputData = []
+            for i in range(len(inputData)):
+                outputData.append(hex(ord(inputData[i])))
+            inputHex.append(outputData)
+            outputData = []
+            for i in range(16):
+                outputData.append(hex(16))
+            inputHex.append(outputData)
+            break
+        # If lenght of input is more than 16, than hex code is in more array devide in lenght 16 and in the last array is use padding 
+        elif len(inputData) > 16:
+            outputData = []
+            for i in range(16):
+                outputData.append(hex(ord(inputData[0])))
+                inputData = inputData.replace(inputData[0], "", 1)
+            inputHex.append(outputData)
+    # Devide hex code of input to the 4x4 matrixes
+    inputHexMatrix = []
+    for i in range(len(inputHex)):
+        oneMatrix = []
+        oneRow = []
+        x = 3
+        for j in range(len(inputHex[i])):
+            oneRow.append(inputHex[i][j])
+            if j == x:
+                x += 4
+                oneMatrix.append(oneRow)
+                oneRow = []
+        inputHexMatrix.append(oneMatrix)
+
+    return inputHexMatrix
