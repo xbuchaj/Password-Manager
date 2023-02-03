@@ -80,3 +80,23 @@ def padding(inputData):
         inputHexMatrix.append(oneMatrix)
 
     return inputHexMatrix
+
+def AES128key():
+    # Make pairs of hex code of generate number's characters and put them into array
+    number = str(hex(RSAnumberGenerator()))
+    AES128key = []
+    for i in range(2, len(number)):
+        if i % 2 == 0:
+            AES128key.append(str(number[i] + number[i + 1]))
+    # Devide pairs of generate number to the 4x4 matrixes
+    AES128keyMatrix = []
+    oneRow = []
+    x = 3
+    for i in range(len(AES128key)):
+        oneRow.append(AES128key[i])
+        if i == x:
+            x += 4
+            AES128keyMatrix.append(oneRow)
+            oneRow = []
+
+    return AES128keyMatrix
