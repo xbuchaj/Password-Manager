@@ -1,6 +1,6 @@
 from RSAnum import RSAnumberGenerator 
 
-subBytes = [
+subtitutionBytes = [
     ["63", "CA", "B7", "04", "09", "53", "D0", "51", "CD", "60", "E0", "E7", "BA", "70", "E1", "8C"],
     ["7C", "82", "FD", "C7", "83", "D1", "EF", "A3", "0C", "81", "32", "C8", "78", "3E", "F8", "A1"],
     ["77", "C9", "93", "23", "2C", "00", "AA", "40", "13", "4F", "3A", "37", "25", "B5", "98", "89"],
@@ -93,7 +93,7 @@ def AES128key():
     oneRow = []
     x = 3
     for i in range(len(AES128key)):
-        oneRow.append(AES128key[i])
+        oneRow.append("0x" + str(AES128key[i]))
         if i == x:
             x += 4
             AES128keyMatrix.append(oneRow)
@@ -107,3 +107,8 @@ def RotWord(Metrix):
     Metrix[3][1] = Metrix[3][2]
     Metrix[3][2] = Metrix[3][3]
     Metrix[3][3] = flag
+
+def subBytes(Column):
+    for i in range(len(Column)):
+        Column[i] = subtitutionBytes[int(Column[i][3], base = 16)][int(Column[i][2], base = 16)]
+    return Column
