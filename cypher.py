@@ -29,3 +29,57 @@ Rcon = [
     [0x1b, 0x00, 0x00, 0x00],
     [0x36, 0x00, 0x00, 0x00],
 ]
+
+def padding(inputData):
+    '''
+    Function convert input data from text form to the hexadecimal form.
+    Output will be devided in 16 bytes and if is necessary it will be add 0x20.
+    '''
+    # The list of data in hexadecimal form
+    outputData = []
+
+    while True:
+        # Variable for 16 bytes of data in hexadecimal form
+        hexForm = "0x"
+
+        if len(inputData) < 16:
+            for i in range(16):
+                if len(inputData) > 0:
+                    hexCharacter = hex(ord(inputData[0]))
+                    if len(hexCharacter) == 4:
+                        hexForm = hexForm + hexCharacter[2] + hexCharacter[3]
+                    else:
+                        hexForm = hexForm + "0" + hexCharacter[2]
+                    inputData = inputData.replace(inputData[0], "", 1)
+                else:
+                    hexForm = hexForm + "20"
+            outputData.append(hexForm)
+            return outputData
+        
+        if len(inputData) == 16:
+            for i in range(16):
+                if len(inputData) > 0:
+                    hexCharacter = hex(ord(inputData[0]))
+                    if len(hexCharacter) == 4:
+                        hexForm = hexForm + hexCharacter[2] + hexCharacter[3]
+                    else:
+                        hexForm = hexForm + "0" + hexCharacter[2]
+                    inputData = inputData.replace(inputData[0], "", 1)
+                else:
+                    hexForm = hexForm + "20"
+            outputData.append(hexForm)
+
+            hexForm = "0x"
+            hexForm = hexForm + (16 * "20")
+            outputData.append(hexForm)
+            return outputData
+
+        if len(inputData) > 16:
+            for i in range(16):
+                hexCharacter = hex(ord(inputData[0]))
+                if len(hexCharacter) == 4:
+                    hexForm = hexForm + hexCharacter[2] + hexCharacter[3]
+                else:
+                    hexForm = hexForm + "0" + hexCharacter[2]
+                inputData = inputData.replace(inputData[0], "", 1)
+            outputData.append(hexForm)              
