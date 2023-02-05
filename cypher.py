@@ -82,4 +82,18 @@ def padding(inputData):
                 else:
                     hexForm = hexForm + "0" + hexCharacter[2]
                 inputData = inputData.replace(inputData[0], "", 1)
-            outputData.append(hexForm)              
+            outputData.append(hexForm)    
+
+def toMatrix(data):
+    '''
+    Devide data from list to the 4x4 matrix.
+    '''
+    # The list of hexadecimal data in matrix
+    outputData = []
+
+    for i in range(len(data)):
+        matrix = []
+        for j in range(2, 33, 8):
+            matrix.append([(data[i])[j] + (data[i])[j + 1], (data[i])[j + 2] + (data[i])[j + 3], (data[i])[j + 4] + (data[i])[j + 5], (data[i])[j + 6] + (data[i])[j + 7]])
+        outputData.append(matrix)
+    return outputData
