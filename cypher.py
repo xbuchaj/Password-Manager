@@ -97,3 +97,25 @@ def toMatrix(data):
             matrix.append([(data[i])[j] + (data[i])[j + 1], (data[i])[j + 2] + (data[i])[j + 3], (data[i])[j + 4] + (data[i])[j + 5], (data[i])[j + 6] + (data[i])[j + 7]])
         outputData.append(matrix)
     return outputData
+
+def RotWord(matrix):
+    '''
+    Rot data in the last column of 4x4 matrix.
+    '''
+    flag = matrix[0][3]
+    matrix[0][3] = matrix[1][3]
+    matrix[1][3] = matrix[2][3]
+    matrix[2][3] = matrix[3][3]
+    matrix[3][3] = flag
+    return matrix
+
+def ShiftRow(matrix, indexRow):
+    '''
+    Shift data in a row with parameter's index of 4x4 matrix.
+    '''
+    flag = matrix[indexRow][0]
+    matrix[indexRow][0] = matrix[indexRow][1]
+    matrix[indexRow][1] = matrix[indexRow][2]
+    matrix[indexRow][2] = matrix[indexRow][3]
+    matrix[indexRow][3] = flag
+    return matrix
