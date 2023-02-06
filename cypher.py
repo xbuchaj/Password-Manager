@@ -119,3 +119,16 @@ def ShiftRow(matrix, indexRow):
     matrix[indexRow][2] = matrix[indexRow][3]
     matrix[indexRow][3] = flag
     return matrix
+
+def subBytes(matrix):
+    '''
+    Substitution of data in matrix with data from subtitutionBytes array.
+    '''
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            sub = str(hex(subtitutionBytes[int(str(matrix[i][j])[0], base = 16)][int(str(matrix[i][j])[1], base = 16)]))
+            if len(sub) == 4:
+                matrix[i][j] = sub[2] + sub[3]
+            else:
+                matrix[i][j] = "0" + sub[2]
+    return matrix
