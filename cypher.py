@@ -100,13 +100,13 @@ def toMatrix(data):
 
 def RotWord(matrix):
     '''
-    Rot data in the last column of 4x4 matrix.
+    Rot data in the last column of matrix.
     '''
-    flag = matrix[0][3]
-    matrix[0][3] = matrix[1][3]
-    matrix[1][3] = matrix[2][3]
-    matrix[2][3] = matrix[3][3]
-    matrix[3][3] = flag
+    flag = matrix[0][len(matrix[0]) - 1]
+    matrix[0][len(matrix[0]) - 1] = matrix[1][len(matrix[0]) - 1]
+    matrix[1][len(matrix[0]) - 1] = matrix[2][len(matrix[0]) - 1]
+    matrix[2][len(matrix[0]) - 1] = matrix[3][len(matrix[0]) - 1]
+    matrix[3][len(matrix[0]) - 1] = flag
     return matrix
 
 def ShiftRow(matrix, indexRow):
@@ -132,3 +132,56 @@ def subBytes(matrix):
             else:
                 matrix[i][j] = "0" + sub[2]
     return matrix
+
+def KeySchedule():
+    '''
+    Return key schedule generate from cipher key.
+    '''
+    cipherKey = "0xeb8598956d04a9c52336542dd6f32241"
+    outputRoundKeys = []
+    
+    for scheduleRound in range(10):
+        column = [[cipherKey[8] + cipherKey[9]], [cipherKey[16] + cipherKey[17]], [cipherKey[24] + cipherKey[25]], [cipherKey[32] + cipherKey[33]]]
+        column = RotWord(column)
+        column = subBytes(column)
+
+        xorColumn = [[cipherKey[2] + cipherKey[3]], [cipherKey[10] + cipherKey[11]], [cipherKey[18] + cipherKey[19]], [cipherKey[26] + cipherKey[27]]]
+        for i in range(4):
+            calc = hex(int(column[i][0], base = 16) ^ int(xorColumn[i][0], base = 16) ^ Rcon[scheduleRound][i])
+            if len(calc) == 4:
+                column[i][0] = calc[2] + calc[3]
+            else:
+                column[i][0] = "0" + calc[2]
+        keyArray = column
+
+        xorColumn = [[cipherKey[4] + cipherKey[5]], [cipherKey[12] + cipherKey[13]], [cipherKey[20] + cipherKey[21]], [cipherKey[28] + cipherKey[29]]]
+        for i in range(4):
+            calc = hex(int(keyArray[i][0], base = 16) ^ int(xorColumn[i][0], base = 16))
+            if len(calc) == 4:
+                keyArray[i].append(calc[2] + calc[3])
+            else:
+                keyArray[i].append("0" + calc[2])
+
+        xorColumn = [[cipherKey[6] + cipherKey[7]], [cipherKey[14] + cipherKey[15]], [cipherKey[22] + cipherKey[23]], [cipherKey[30] + cipherKey[31]]]
+        for i in range(4):
+            calc = hex(int(keyArray[i][1], base = 16) ^ int(xorColumn[i][0], base = 16))
+            if len(calc) == 4:
+                keyArray[i].append(calc[2] + calc[3])
+            else:
+                keyArray[i].append("0" + calc[2])
+
+        xorColumn = [[cipherKey[8] + cipherKey[9]], [cipherKey[16] + cipherKey[17]], [cipherKey[24] + cipherKey[25]], [cipherKey[32] + cipherKey[33]]]
+        for i in range(4):
+            calc = hex(int(keyArray[i][2], base = 16) ^ int(xorColumn[i][0], base = 16))
+            if len(calc) == 4:
+                keyArray[i].append(calc[2] + calc[3])
+            else:
+                keyArray[i].append("0" + calc[2])
+        
+        key = "0x"
+        for i in range(4):
+            for j in range(4):
+                key = key + str(keyArray[i][j])
+        cipherKey = key
+        outputRoundKeys.append(key)
+    return outputRoundKeys
