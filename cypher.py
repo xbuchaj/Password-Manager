@@ -30,6 +30,13 @@ Rcon = [
     [0x36, 0x00, 0x00, 0x00],
 ]
 
+GaloisField = [
+    [2, 3, 1, 1],
+    [1, 2, 3, 1],
+    [1, 1, 2, 3],
+    [3, 1, 1, 2]
+]
+
 def padding(inputData):
     '''
     Function convert input data from text form to the hexadecimal form.
@@ -185,3 +192,58 @@ def KeySchedule():
         cipherKey = key
         outputRoundKeys.append(key)
     return outputRoundKeys
+
+def gmul(a, b):
+    if b == 1:
+        return a
+    tmp = (a << 1) & 0xff
+    if b == 2:
+        return tmp if a < 128 else tmp ^ 0x1b
+    if b == 3:
+        return gmul(a, 2) ^ a
+
+def encryption(data):
+    '''
+    Return encrypted data in hex format. Input is in hex format.
+    '''
+    state = toMatrix(padding(data))
+    cipherKey = toMatrix(KeySchedule())
+
+    for encryptionRound in range(10):
+
+        for inputArray in range(len(state)):
+
+            currentState = subBytes(state[inputArray])
+
+            currentState = ShiftRow(currentState, 1)
+            for counter in range(2):
+                currentState = ShiftRow(currentState, 2)
+            for counter in range(3):
+                currentState = ShiftRow(currentState, 3)
+            
+            for i in range(4):
+                column = [int(currentState[0][i], base = 16), int(currentState[1][i], base = 16), int(currentState[2][i], base = 16), int(currentState[3][i], base = 16)]
+                for j in range(4):
+                    calc = hex(gmul(column[0], GaloisField[j][0]) ^ gmul(column[1], GaloisField[j][1]) ^ gmul(column[2], GaloisField[j][2]) ^ gmul(column[3], GaloisField[j][3]))
+                    if len(calc) == 4:
+                        currentState[j][i] = calc[2] + calc[3]
+                    else:
+                        currentState[j][i] = "0" + calc[2]
+
+            for i in range(4):
+                for j in range(4):
+                    calc = hex(int(currentState[i][j], base = 16) ^ int(cipherKey[encryptionRound][i][j], base = 16))
+                    if len(calc) == 4:
+                        currentState[i][j] = calc[2] + calc[3]
+                    else:
+                        currentState[i][j] = "0" + calc[2]
+            state[inputArray] = currentState
+    
+    outputHex = []
+    for i in range(len(state)):
+        oneArrayString = "0x"
+        for j in range(4):
+            for k in range(4):
+                oneArrayString = oneArrayString + str(state[i][j][k])
+        outputHex.append(oneArrayString)      
+    return outputHex
