@@ -37,6 +37,13 @@ GaloisField = [
     [3, 1, 1, 2]
 ]
 
+invGaloisField = [
+    [0x0e, 0x0b, 0x0d, 0x09],
+    [0x09, 0x0e, 0x0b, 0x0d],
+    [0x0d, 0x09, 0x0e, 0x0b],
+    [0x0b, 0x0d, 0x09, 0x0e]
+]
+
 def padding(inputData):
     '''
     Function convert input data from text form to the hexadecimal form.
@@ -140,6 +147,21 @@ def subBytes(matrix):
                 matrix[i][j] = "0" + sub[2]
     return matrix
 
+def invSubBytes(matrix):
+    '''
+    Inverte substitution of data in matrix with data from subtitutionBytes array.
+    '''
+    position = None
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            search = int(matrix[i][j], base = 16)
+            for k in range(len(subtitutionBytes)):
+                for l in range(len(subtitutionBytes[k])):
+                    if subtitutionBytes[k][l] == search:
+                        position = hex(k)[2] + hex(l)[2]
+            matrix[i][j] = position
+    return matrix
+
 def KeySchedule():
     '''
     Return key schedule generate from cipher key.
@@ -193,14 +215,19 @@ def KeySchedule():
         outputRoundKeys.append(key)
     return outputRoundKeys
 
-def gmul(a, b):
-    if b == 1:
-        return a
-    tmp = (a << 1) & 0xff
-    if b == 2:
-        return tmp if a < 128 else tmp ^ 0x1b
-    if b == 3:
-        return gmul(a, 2) ^ a
+def galoisMult(a, b):
+    """
+    Multiplication in the Galois fields.
+    """
+    p = 0
+    hi_bit_set = 0
+    for i in range(8):
+        if b & 1 == 1: p ^= a
+        hi_bit_set = a & 0x80
+        a <<= 1
+        if hi_bit_set == 0x80: a ^= 0x1b
+        b >>= 1
+    return p % 256
 
 def encryption(data):
     '''
@@ -224,7 +251,7 @@ def encryption(data):
             for i in range(4):
                 column = [int(currentState[0][i], base = 16), int(currentState[1][i], base = 16), int(currentState[2][i], base = 16), int(currentState[3][i], base = 16)]
                 for j in range(4):
-                    calc = hex(gmul(column[0], GaloisField[j][0]) ^ gmul(column[1], GaloisField[j][1]) ^ gmul(column[2], GaloisField[j][2]) ^ gmul(column[3], GaloisField[j][3]))
+                    calc = hex(galoisMult(column[0], GaloisField[j][0]) ^ galoisMult(column[1], GaloisField[j][1]) ^ galoisMult(column[2], GaloisField[j][2]) ^ galoisMult(column[3], GaloisField[j][3]))
                     if len(calc) == 4:
                         currentState[j][i] = calc[2] + calc[3]
                     else:
@@ -247,3 +274,50 @@ def encryption(data):
                 oneArrayString = oneArrayString + str(state[i][j][k])
         outputHex.append(oneArrayString)      
     return outputHex
+
+def decryption(data):
+    '''
+    Return decrypted data in text format. Input is in hex format.
+    '''
+    state = toMatrix(data)
+    cipherKey = toMatrix(KeySchedule())
+
+    for decryptionRound in range(9, -1, -1):
+
+        for inputArray in range(len(state)):
+
+            currentState = state[inputArray]
+
+            for i in range(4):
+                for j in range(4):
+                    calc = hex(int(currentState[i][j], base = 16) ^ int(cipherKey[decryptionRound][i][j], base = 16))
+                    if len(calc) == 4:
+                        currentState[i][j] = calc[2] + calc[3]
+                    else:
+                        currentState[i][j] = "0" + calc[2]
+
+            for i in range(4):
+                column = [int(currentState[0][i], base = 16), int(currentState[1][i], base = 16), int(currentState[2][i], base = 16), int(currentState[3][i], base = 16)]
+                for j in range(4):
+                    calc = hex(galoisMult(column[0], invGaloisField[j][0]) ^ galoisMult(column[1], invGaloisField[j][1]) ^ galoisMult(column[2], invGaloisField[j][2]) ^ galoisMult(column[3], invGaloisField[j][3]))
+                    if len(calc) == 4:
+                        currentState[j][i] = calc[2] + calc[3]
+                    else:
+                        currentState[j][i] = "0" + calc[2]
+
+            for counter in range(3):
+                currentState = ShiftRow(currentState, 1)
+            for counter in range(2):
+                currentState = ShiftRow(currentState, 2)
+            currentState = ShiftRow(currentState, 3)
+
+            currentState = invSubBytes(currentState)
+
+            state[inputArray] = currentState
+    
+    outputText = ""
+    for inputArray in range(len(state)):
+        for i in range(len(state[inputArray])):
+            for j in range(len(state[inputArray][i])):
+                outputText = outputText + chr(int(state[inputArray][i][j], base = 16))
+    return outputText
