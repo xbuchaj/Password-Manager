@@ -88,9 +88,12 @@ def keyGen():
     key = ""
     for counter in range(128):
         key = key + str(random.randrange(0,2))
+    key = hex(int(key, base = 2))
+    while len(key) < 34:
+        key = key[:2] + "0" + key[2:] 
     configObject = ConfigParser()
     configObject["KEY"] = {
-        "key": hex(int(key, base = 2)) 
+        "key": key 
     }
     with open('config.ini', 'w') as config:
         configObject.write(config)
