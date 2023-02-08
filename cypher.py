@@ -434,4 +434,10 @@ def decryption(data):
         for i in range(len(state[inputArray])):
             for j in range(len(state[inputArray][i])):
                 outputText = outputText + chr(int(state[inputArray][i][j], base = 16))
-    return outputText
+    formatOutputText = outputText[0]
+    for index in range(1, len(outputText) - 1):
+        if ((outputText[index - 1] != " ") and (outputText[index] == " ") and (outputText[index + 1] != " ")) or (outputText[index] != " "):
+            formatOutputText = formatOutputText + outputText[index]
+        elif outputText[index] == " ":
+            pass
+    return formatOutputText
