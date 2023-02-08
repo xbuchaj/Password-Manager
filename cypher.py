@@ -1,3 +1,37 @@
+'''
+        cypher.py - v1.0 - developed by xbuchaj in 2023        
+This script contains all the important functions for encryption 
+and decryption using the AES-128 cipher, as well as a function 
+for generating a 128-bit key for the given cipher.
+All functions can be used independently without the need for other 
+libraries (except the 'random' library) and without the need for 
+other source codes.
+I hope that I have understood the whole principle of encryption 
+enough to make encryption safe with the functions I have created.
+
+LICENSE:
+Copyright 2023 @xbuchaj
+Permission is hereby granted, free of charge, to any person 
+obtaining a copy of this software and associated documentation 
+files (the "Software"), to deal in the Software without restriction, 
+including without limitation the rights to use, copy, modify, merge, 
+publish, distribute, sublicense, and/or sell copies of the Software, 
+and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+'''
+
+from configparser import ConfigParser
 import random
 
 subtitutionBytes = [
@@ -48,23 +82,33 @@ invGaloisField = [
 
 def keyGen():
     '''
-    Function generate the key in hexadecimal form.
+    A function that creates a 128-bit key and write them in the config.ini
+    file.
     '''
     key = ""
     for counter in range(128):
         key = key + str(random.randrange(0,2))
-    return hex(int(key, base = 2))
+    configObject = ConfigParser()
+    configObject["KEY"] = {
+        "key": hex(int(key, base = 2)) 
+    }
+    with open('config.ini', 'w') as config:
+        configObject.write(config)
 
 def padding(inputData):
     '''
-    Function convert input data from text form to the hexadecimal form.
-    Output will be devided in 16 bytes and if is necessary it will be add 0x20.
+    The function converts input data from text form to hexadecimal form. If 
+    there are insufficient number of hexadecimal numbers after division, it 
+    will assign the value 0x20. But if there are more than necessary after 
+    dividing the hexadecimal numbers, it creates additional values.
+    Parameters:
+        inputData (str): input data in text form
+    Returns:
+        list: list with created strings of hexadecimal data
     '''
-    # The list of data in hexadecimal form
     outputData = []
 
     while True:
-        # Variable for 16 bytes of data in hexadecimal form
         hexForm = "0x"
 
         if len(inputData) < 16:
@@ -111,9 +155,14 @@ def padding(inputData):
 
 def toMatrix(data):
     '''
-    Devide data from list to the 4x4 matrix.
+    The function divides the input data in hexadecimal form after padding 
+    into a 4x4 matrix. If there is more input data, it will create more 
+    matrices.
+    Parameters:
+        data (list): list of data in hexadecimal form
+    Returns:
+        list: list with created matrix / matrices
     '''
-    # The list of hexadecimal data in matrix
     outputData = []
 
     for i in range(len(data)):
@@ -125,7 +174,14 @@ def toMatrix(data):
 
 def RotWord(matrix):
     '''
-    Rot data in the last column of matrix.
+    The function rotates the data in the last column of the matrix. It 
+    will rotate so that the first element in the column will be the last, 
+    the second will be the first, the third will be the second and the 
+    fourth will be the third.
+    Parameters:
+        matrix (list): matrix with data
+    Returns:
+        list: matrix with rotate data in the last column
     '''
     flag = matrix[0][len(matrix[0]) - 1]
     matrix[0][len(matrix[0]) - 1] = matrix[1][len(matrix[0]) - 1]
@@ -136,7 +192,15 @@ def RotWord(matrix):
 
 def ShiftRow(matrix, indexRow):
     '''
-    Shift data in a row with parameter's index of 4x4 matrix.
+    The function rotates the data in the row with parameter's index of 
+    the matrix. It will rotate so that the first element in the row will 
+    be the last, the second will be the first, the third will be the 
+    second and the fourth will be the third.
+    Parameters:
+        matrix (list): matrix with data
+        indexRow (int): index of row where you need rotate the data
+    Returns:
+        list: matrix with rotate data in the row
     '''
     flag = matrix[indexRow][0]
     matrix[indexRow][0] = matrix[indexRow][1]
@@ -147,7 +211,14 @@ def ShiftRow(matrix, indexRow):
 
 def subBytes(matrix):
     '''
-    Substitution of data in matrix with data from subtitutionBytes array.
+    The function performs data substitution with data in the substitutionBytes 
+    list. The first number of the hexadecimal number indicates the row of the 
+    element and the second number indicates the column of the element in the 
+    substitutionBytes list.
+    Parameters:
+        matrix (list): matrix with data
+    Returns:
+        list: matrix with new data after substitution
     '''
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
@@ -160,7 +231,14 @@ def subBytes(matrix):
 
 def invSubBytes(matrix):
     '''
-    Inverte substitution of data in matrix with data from subtitutionBytes array.
+    The function performs an inverse data substitution with the data position 
+    in the substitutionBytes list. The row position in hexadecimal is the first 
+    number and the column position in hexadecimal is the second number of the 
+    new data.
+    Parameters:
+        matrix (list): matrix with data
+    Returns:
+        list: matrix with new data after inverse substitution
     '''
     position = None
     for i in range(len(matrix)):
@@ -175,9 +253,16 @@ def invSubBytes(matrix):
 
 def KeySchedule():
     '''
-    Return key schedule generate from cipher key.
+    The function calculates ten keys (each key for one round of encryption / decryption) 
+    derived from the master key and from previously calculated ones. It puts all the 
+    keys in the list in hexadecimal form.
+    Returns:
+        list: list with round keys
     '''
-    cipherKey = "0xeb8598956d04a9c52336542dd6f32241"
+    configFile = ConfigParser()
+    configFile.read("config.ini")
+    reader = configFile["KEY"]
+    cipherKey = reader["key"]
     outputRoundKeys = []
     
     for scheduleRound in range(10):
@@ -228,7 +313,11 @@ def KeySchedule():
 
 def galoisMult(a, b):
     """
-    Multiplication in the Galois fields.
+    The function performs the multiplication of two hexadecimal numbers. If the resulting 
+    number has more than eight bits, it performs a bit shift.
+    Parameters:
+        a (int / hex): first number
+        a (int / hex): second number
     """
     p = 0
     hi_bit_set = 0
@@ -242,7 +331,12 @@ def galoisMult(a, b):
 
 def encryption(data):
     '''
-    Return encrypted data in hex format. Input is in hex format.
+    The function encrypts the input hexadecimal data and returns a list of all encrypted 
+    input data (if there is more than one). AES-128 standard is used for encryption.
+    Parameters:
+        data (list): list with data in hexadecimal form
+    Returns:
+        list: list with encrypted data in hexadecimal form
     '''
     state = toMatrix(padding(data))
     cipherKey = toMatrix(KeySchedule())
@@ -288,7 +382,13 @@ def encryption(data):
 
 def decryption(data):
     '''
-    Return decrypted data in text format. Input is in hex format.
+    The function decrypts the input hexadecimal data and returns a string with the decrypted 
+    input data. The reverse encryption method using the AES-128 standard is used for 
+    decryption.
+    Parameters:
+        data (list): list with encrypted data in hexadecimal form
+     Returns:
+        string: string with decrypted data in text form
     '''
     state = toMatrix(data)
     cipherKey = toMatrix(KeySchedule())
