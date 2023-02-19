@@ -559,7 +559,7 @@ def edit(t):
             if val.is_sequence:
 
                 if val.code == 361:
-                    break
+                    return "pass"
 
                 elif val.code == 263:
                     if pointer == 1:

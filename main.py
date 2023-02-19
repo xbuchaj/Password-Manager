@@ -105,7 +105,10 @@ def main():
                     for row in reader:
                         if (decryption(eval(row[1])) == var[1]):
                             var = edit([decryption(eval(row[0])), decryption(eval(row[1])), decryption(eval(row[2])), decryption(eval(row[3])), decryption(eval(row[4]))])
-                            t.append([row[0], row[1], encryption(var[0]), encryption(var[1]), encryption(var[2])])
+                            if var == "pass":
+                                t.append(row)
+                            else:
+                                t.append([row[0], row[1], encryption(var[0]), encryption(var[1]), encryption(var[2])])
                         else:
                             t.append(row)
                 with open('data.csv', 'w', newline='') as file:
