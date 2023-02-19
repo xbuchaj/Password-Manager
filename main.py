@@ -36,9 +36,14 @@ DEALINGS IN THE SOFTWARE.
 
 from libraries.GUI import logIn, signIn, manager, addNew, showPassword, edit, delete
 from libraries.cypher import encryption, decryption
+from setup import initSetup
 import libraries.csvLib as csv
+import libraries.osLib as os
 
 def main():
+    if (os.path.exists("database") == False):
+        initSetup()
+
     currentUserID = None
     flag = False
 
