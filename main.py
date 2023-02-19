@@ -51,7 +51,7 @@ def main():
 
             elif (((var[0] != "") or (var[1] != "")) and (var != "new_account")):
                 flag = True
-                with open('users.csv', 'r') as file:
+                with open('database/users.csv', 'r') as file:
                     reader = csv.reader(file)
                     for row in reader:
                         if (var[0] == decryption(eval(row[1]))) and (var[1] == decryption(eval(row[2]))):
@@ -71,7 +71,7 @@ def main():
 
                     elif ((var[0] != "") or (var[1] != "")):
                         flag = False
-                        with open('users.csv', 'r') as file:
+                        with open('database/users.csv', 'r') as file:
                             reader = csv.reader(file)
                             for row in reader:
                                 if decryption(eval(row[1])) == var[0]:
@@ -79,7 +79,7 @@ def main():
                                     break
                     
                     if (flag == False):
-                        with open('users.csv', 'r') as file:
+                        with open('database/users.csv', 'r') as file:
                             reader = csv.reader(file)
                             t = []
                             for row in reader:   
@@ -89,14 +89,14 @@ def main():
                             else:
                                 newUserID = int(decryption(eval(t[len(t) - 1][0]))) + 1
                             t.append([encryption(str(newUserID)), encryption(var[0]), encryption(var[1])])
-                        with open('users.csv', 'w', newline='') as file:
+                        with open('database/users.csv', 'w', newline='') as file:
                             writer = csv.writer(file)
                             writer.writerows(t)
                         break
 
         while True:
             dataCurrentUser = []
-            with open('data.csv', 'r') as file:
+            with open('database/data.csv', 'r') as file:
                 reader = csv.reader(file)
                 for row in reader:
                     if decryption(eval(row[0])) == currentUserID:
@@ -119,7 +119,7 @@ def main():
                         flag = True
 
                     elif (((var[0] != "") or (var[1] != "") or (var[2] != "")) and (var != "back")):
-                        with open('data.csv', 'r') as file:
+                        with open('database/data.csv', 'r') as file:
                             reader = csv.reader(file)
                             t = []
                             for row in reader:
@@ -129,13 +129,13 @@ def main():
                             else:
                                 dataID = int(decryption(eval(t[len(t) - 1][1]))) + 1
                             t.append([encryption(currentUserID), encryption(str(dataID)), encryption(var[0]), encryption(var[1]), encryption(var[2])])
-                        with open('data.csv', 'w', newline='') as file:
+                        with open('database/data.csv', 'w', newline='') as file:
                             writer = csv.writer(file)
                             writer.writerows(t)
                         break
             
             elif (var[0] == "edit"):
-                with open('data.csv', 'r') as file:
+                with open('database/data.csv', 'r') as file:
                     reader = csv.reader(file)
                     t = []
                     for row in reader:
@@ -147,12 +147,12 @@ def main():
                                 t.append([row[0], row[1], encryption(var[0]), encryption(var[1]), encryption(var[2])])
                         else:
                             t.append(row)
-                with open('data.csv', 'w', newline='') as file:
+                with open('database/data.csv', 'w', newline='') as file:
                     writer = csv.writer(file)
                     writer.writerows(t)
 
             elif (var[0] == "show"):
-                with open('data.csv', 'r') as file:
+                with open('database/data.csv', 'r') as file:
                     reader = csv.reader(file)
                     for row in reader:
                         if (decryption(eval(row[1])) == var[1]):
@@ -160,7 +160,7 @@ def main():
                             break
 
             elif var[0] == "del":
-                with open('data.csv', 'r') as file:
+                with open('database/data.csv', 'r') as file:
                     reader = csv.reader(file)
                     t = []
                     for row in reader:
@@ -172,7 +172,7 @@ def main():
                                 pass
                         else:
                             t.append(row)
-                with open('data.csv', 'w', newline='') as file:
+                with open('database/data.csv', 'w', newline='') as file:
                     writer = csv.writer(file)
                     writer.writerows(t)
 
