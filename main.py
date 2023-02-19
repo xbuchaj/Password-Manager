@@ -1,3 +1,39 @@
+'''
+            main.py - v1.0 - developed by xbuchaj in 2023
+This source code contains the backend for the entire Password Manager 
+application. The program stores data entered by users in csv files. 
+User.csv contains information about user accounts and Data.csv contains 
+data about written records. All data in csv files are encrypted using 
+the AES-128 cipher.
+This version of the code corresponds to version 1.0, so if some 
+functionalities do not work correctly, I will work on removing them.
+Structure of data in User.csv:
+               userID[0], username[1], password[2]
+Structure of data in Data.csv:
+      userID[0], dataID[1], domain[2] username[3], password[4]
+
+LICENSE:
+Copyright 2023 @xbuchaj
+Permission is hereby granted, free of charge, to any person 
+obtaining a copy of this software and associated documentation 
+files (the "Software"), to deal in the Software without restriction, 
+including without limitation the rights to use, copy, modify, merge, 
+publish, distribute, sublicense, and/or sell copies of the Software, 
+and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+'''
+
 from GUI import logIn, signIn, manager, addNew, showPassword, edit, delete
 from cypher import encryption, decryption
 import csv
