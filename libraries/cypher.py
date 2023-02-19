@@ -95,7 +95,7 @@ def keyGen():
     configObject["KEY"] = {
         "key": key 
     }
-    with open('config.ini', 'w') as config:
+    with open('database/config.ini', 'w') as config:
         configObject.write(config)
 
 def padding(inputData):
@@ -263,7 +263,7 @@ def KeySchedule():
         list: list with round keys
     '''
     configFile = ConfigParser()
-    configFile.read("config.ini")
+    configFile.read("database/config.ini")
     reader = configFile["KEY"]
     cipherKey = reader["key"]
     outputRoundKeys = []
