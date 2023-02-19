@@ -434,7 +434,7 @@ def addNew(error = False):
                         print(terminal.move_xy((terminal.width // 2) + 3 + len(password), (terminal.height // 2) + 2) +  " ")
 
                 elif val.code == 343:
-                    if pointer < 3:
+                    if pointer <= 3:
                         pointer += 1
                     elif pointer == 4:
                         return domain, username, password
