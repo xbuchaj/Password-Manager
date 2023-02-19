@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 '''
 
 import blessed
-import os
+import libraries.osLib as os
 
 terminal = blessed.Terminal()
 

@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 
 from GUI import logIn, signIn, manager, addNew, showPassword, edit, delete
 from cypher import encryption, decryption
-import csv
+import libraries.csvLib as csv
 
 def main():
     currentUserID = None
