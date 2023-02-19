@@ -34,8 +34,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 '''
 
-from GUI import logIn, signIn, manager, addNew, showPassword, edit, delete
-from cypher import encryption, decryption
+from libraries.GUI import logIn, signIn, manager, addNew, showPassword, edit, delete
+from libraries.cypher import encryption, decryption
 import libraries.csvLib as csv
 
 def main():
